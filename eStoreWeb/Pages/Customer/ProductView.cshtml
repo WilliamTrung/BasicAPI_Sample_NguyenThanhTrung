@@ -1,0 +1,65 @@
+﻿@page
+@model eStoreWeb.Pages.Customer.ProductViewModel
+
+@{
+    ViewData["Title"] = "ProductView";
+}
+
+<h1>ProductView</h1>
+<form asp-page-handler="search" >
+    <label>Search</label>
+    <input name="name" type="text" placeholder="product name"/>
+    <label>Unit Price</label>
+    <input name="price" type="number" />
+    <button>Submit</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].UnitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Product) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitsInStock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                <form method="post" asp-page-handler="add">
+                    <input name="id" type="hidden" value="@item.ProductId"/>
+                    <input name="quantity" type="number" max="@item.UnitsInStock" min="0" step="1"/>
+                    <button>Add to Cart</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

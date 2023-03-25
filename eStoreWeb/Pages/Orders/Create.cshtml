@@ -1,0 +1,172 @@
+﻿@page
+@model eStoreWeb.Pages.Orders.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<p class="alert-danger">@ViewData["Error"]</p>
+<hr />
+<div class="row">
+    <h2>Product List</h2>
+    <table class="table">
+    <thead>
+        <tr>
+            <th>
+                    @Html.DisplayNameFor(model => model.Products[0].ProductName)
+            </th>
+            <th>
+                    @Html.DisplayNameFor(model => model.Products[0].Weight)
+            </th>
+            <th>
+                    @Html.DisplayNameFor(model => model.Products[0].UnitPrice)
+            </th>
+            <th>
+                    @Html.DisplayNameFor(model => model.Products[0].UnitsInStock)
+            </th>
+            <th>
+                    @Html.DisplayNameFor(model => model.Products[0].Category)
+            </th>
+            <th>Quantity</th>
+            <th>Discount</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitsInStock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                        <form method="post" asp-page-handler="add">
+                                <input name="id" type="hidden" value="@item.ProductId"/>
+                                <td>
+                                        <input name="quantity" type="number" max="@item.UnitsInStock" min="0" step="1"/>
+                                </td>
+                                <td>
+                                        <input name="discount" type="number" max="100" min="0" step="1"/>
+                                </td>
+
+                                <td>
+                                        <button>Add</button>
+                                </td>
+
+                            </form>    
+                </tr>
+            }
+    </tbody>
+</table>
+</div>
+<div class="row">
+    <h2>Details</h2>
+    <hr/>
+    <div class="col-6">
+        @if(Model.Order != null && Model.Order.OrderDetails != null)
+        {
+                <table class="table">
+        <thead>
+            <tr>
+                <th>
+                        Price
+                </th>
+                <th>
+                        Quantity
+                </th>
+                <th>
+                        Discount
+                </th>
+                <th>
+                    Product Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+                    @foreach (var item in Model.Order.OrderDetails)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UnitPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Discount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                            <td>
+                                <form asp-page-handler="remove" method="post">
+                                    <input type="hidden" name="id" value="@item.ProductId"/>
+                                    <button>Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+        </tbody>
+    </table>
+        }
+        
+
+    </div>
+    <hr/>
+</div>
+<div class="row">
+    <h2>Order</h2>
+    <div class="col-md-4">
+        <form method="post" asp-page-handler="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Order.MemberId" class="control-label"></label>
+                <select asp-for="Order.MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.OrderDate" class="control-label"></label>
+                <input asp-for="Order.OrderDate" class="form-control" />
+                <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.RequiredDate" class="control-label"></label>
+                <input asp-for="Order.RequiredDate" class="form-control" />
+                <span asp-validation-for="Order.RequiredDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.ShippedDate" class="control-label"></label>
+                <input asp-for="Order.ShippedDate" class="form-control" />
+                <span asp-validation-for="Order.ShippedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.Freight" class="control-label"></label>
+                <input asp-for="Order.Freight" class="form-control" />
+                <span asp-validation-for="Order.Freight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
